@@ -4,94 +4,97 @@ ob_start();
 // php
 $title = "Cookies";
 
-
-
+$stagiaires = [];
+$one_year = time() + 60 * 60 * 24 * 365;
 if (!isset($_COOKIE['stagiaires'])) {
-    $new_key = 1;
+    setcookie('stagiaires', "[]", $one_year);
+    header('Location: cookies');
+    exit();
 } else {
-    $new_key = max(array_keys(json_decode($_COOKIE['stagiaires'], true))) + 1;
+    $stagiaire_from_cookies = $_COOKIE['stagiaires'];
+    $stagiaires = json_decode($_COOKIE['stagiaires'], true);
 }
 
+if (count($stagiaires) == 0) {
+    $new_key = 1;
+} else {
+    $new_key = max(array_keys($stagiaires)) + 1;
+}
+
+// Supprimer
+if (isset($_GET['id'])) {
+    $stagiaire_id = (int)$_GET['id'];
+    unset($stagiaires[$stagiaire_id]);
+    $stagiaires = json_encode($stagiaires);
+    setcookie('stagiaires', $stagiaires, $one_year);
+    header('Location: cookies');
+    exit();
+}
+
+// Ajouter
 
 if (isset($_POST['btn_ajouter_stagiaire'])) {
+
     $nom = $_POST['nom'];
     $note = $_POST['note'];
     $age = $_POST['age'];
 
-    $nouvel_stagiaire = [
-        $new_key => [
-            'nom' => $nom,
-            'note' => $note,
-            'age' => $age
-        ]
+    // dd($_POST);
+    $new_stagiaire = [
+        'nom' => $nom,
+        'note' => $note,
+        'age' =>  $age,
     ];
-    // dd($nouvel_stagiaire);
 
-    // 1- Ajouter cookie
-    $nouvel_stagiaire = json_encode($nouvel_stagiaire);
-    $annee = time() + 60 * 60 * 24 * 365;
-    setcookie('stagiaires', $nouvel_stagiaire, $annee);
+    // Add new stagiaire into $stagiaire
+    $stagiaires[$new_key] = $new_stagiaire;
 
+    // Transform $stagiaire from array to json
 
-
-    // 2- Modifier cookie
-
+    $stagiaires = json_encode($stagiaires);
+    setcookie('stagiaires', $stagiaires, $one_year);
 
     $_SESSION['flash']['info'] = 'Bien ajouter';
-
     header('Location: cookies');
     exit();
 }
 
 
+// (Modifier) Detect click into btn update Stagiaire
+if (isset($_POST['btn_modifier_stagiaire'])) {
+    // Get data from post
 
-if (!isset($_COOKIE['stagiaires'])) {
+    // Get key stagiaire from session
+    $stagiaire_id = $_POST['stagiaire_id'];
 
-    // $stagiaires_db = [];
+    // Get new name stagiaire from input
+    $new_nom = $_POST['nom'];
 
-    // $stagiaires_db = [
-    //     1 => [
-    //         'nom' => 'Hind',
-    //         'note' => 10,
-    //         'age' => 22,
-    //     ],
-    //     2 => [
-    //         'nom' => 'Maryam',
-    //         'note' => 10,
-    //         'age' => 24,
-    //     ],
-    //     3  => [
-    //         'nom' => 'Youssra',
-    //         'note' => 10,
-    //         'age' => 18,
-    //     ],
-    //     4 => [
-    //         'nom' => 'Nabila',
-    //         'note' => 10,
-    //         'age' => 23,
-    //     ],
-    //     5 => [
-    //         'nom' => 'Sara',
-    //         'note' => 10,
-    //         'age' => 24,
-    //     ],
-    // ];
+    // Get new mark stagiaire from input
+    $new_note = $_POST['note'];
 
-    // $stagiaires_json = json_encode($stagiaires_db);
-    // $annee = time() + 60 * 60 * 24 * 365;
-    // setcookie('stagiaires', $stagiaires_json, $annee);
+    // Get new age stagiaire from input
+    $new_age = $_POST['age'];
+
+    // Create array with new information 
+    $new_information = [
+        'nom' => $new_nom,
+        'note' => $new_note,
+        'age' =>  $new_age,
+    ];
+
+    // Push new information into array stagiaire
+    $stagiaires[$stagiaire_id] = $new_information;
+    $stagiaires = json_encode($stagiaires);
+    setcookie('stagiaires', $stagiaires, $one_year);
+
+
+    // Send me to gestion_stagiaire_cookies page
+    header('Location: cookies');
+    exit();
 }
 
 
-// dd($stagiaires_json);
-$stagiaires = [];
-
-if (isset($_COOKIE['stagiaires'])) {
-    $get_stagiaire_from_cookie = $_COOKIE['stagiaires'];
-    $stagiaires = json_decode($_COOKIE['stagiaires'], true);
-}
-// dd($stagiaires);
-// die();
 $content_php = ob_get_clean();
 
 ob_start(); ?>
@@ -112,9 +115,9 @@ ob_start(); ?>
 
         <div class="modal fade" id="add" tabindex="-1" aria-labelledby="addLabel" aria-hidden="true">
             <div class="modal-dialog">
-                <div class="modal-content">
+                <form method="post">
+                    <div class="modal-content">
 
-                    <form method="post">
                         <div class="modal-header">
                             <h1 class="modal-title fs-5" id="addLabel">Ajouter un stagiaire</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -128,13 +131,13 @@ ob_start(); ?>
                             </div>
 
                             <div class="form-floating mb-3">
-                                <input min="0" max="10" type="number" class="form-control input-sm" id="note" name="note" placeholder="Note:">
+                                <input type="number" class="form-control input-sm" id="note" name="note" placeholder="Note:">
                                 <label for="note">Note:</label>
                             </div>
 
 
                             <div class="form-floating mb-3">
-                                <input min="13" max="65" type="number" class="form-control input-sm" id="age" name="age" placeholder="Age:">
+                                <input type="number" class="form-control input-sm" id="age" name="age" placeholder="Age:">
                                 <label for="age">Age:</label>
                             </div>
 
@@ -145,8 +148,8 @@ ob_start(); ?>
                             <button type="submit" name="btn_ajouter_stagiaire" class="btn btn-primary">Enregistrer</button>
                         </div>
                         <!-- modal-footer -->
-                </div>
-                <!-- modal-content -->
+                    </div>
+                    <!-- modal-content -->
                 </form>
             </div>
         </div>
@@ -205,13 +208,13 @@ ob_start(); ?>
                                                     </div>
 
                                                     <div class="form-floating mb-3">
-                                                        <input min="0" max="10" type="number" class="form-control input-sm" id="note" name="note" placeholder="Note:" value="<?= $s['note'] ?>">
+                                                        <input type="number" class="form-control input-sm" id="note" name="note" placeholder="Note:" value="<?= $s['note'] ?>">
                                                         <label for="note">Note:</label>
                                                     </div>
 
 
                                                     <div class="form-floating mb-3">
-                                                        <input min="13" max="65" type="number" class="form-control input-sm" id="age" name="age" placeholder="Age:" value="<?= $s['age'] ?>">
+                                                        <input type="number" class="form-control input-sm" id="age" name="age" placeholder="Age:" value="<?= $s['age'] ?>">
                                                         <label for="age">Age:</label>
                                                     </div>
 

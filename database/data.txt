@@ -1,0 +1,2 @@
+{"nom":"Mehdi","note":"1","age":"18"}
+{"nom":"Aboubakr","note":"16","age":"10"}
