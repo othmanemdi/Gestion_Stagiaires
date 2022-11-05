@@ -4,14 +4,38 @@ ob_start();
 // php
 $title = "Cookies";
 
-
-
+$stagiaires = [];
+$one_year = time() + 60 * 60 * 24 * 365;
 if (!isset($_COOKIE['stagiaires'])) {
+    setcookie('stagiaires', "[]", $one_year);
+    header('Location: cookies');
+    exit();
+} else {
+    $stagiaire_from_cookies = $_COOKIE['stagiaires'];
+    $stagiaires = json_to_array($_COOKIE['stagiaires']);
+}
+if (count($stagiaires) == 0) {
     $new_key = 1;
 } else {
-    $new_key = max(array_keys(json_decode($_COOKIE['stagiaires'], true))) + 1;
+    $new_key = max(array_keys($stagiaires)) + 1;
 }
 
+// Supprimer
+if (isset($_GET['id'])) {
+    $stagiaire_id = (int)$_GET['id'];
+
+    if ($stagiaire_id <= 0) {
+        $_SESSION['flash']['danger'] = 'id introuvable !!!';
+        header('Location: cookies');
+        exit();
+    }
+
+    unset($stagiaires[$stagiaire_id]);
+    create_cookie_json('stagiaires', $stagiaires, $one_year);
+    $_SESSION['flash']['info'] = 'Bien supprimer';
+    header('Location: cookies');
+    exit();
+}
 
 if (isset($_POST['btn_ajouter_stagiaire'])) {
     $nom = $_POST['nom'];
@@ -19,23 +43,13 @@ if (isset($_POST['btn_ajouter_stagiaire'])) {
     $age = $_POST['age'];
 
     $nouvel_stagiaire = [
-        $new_key => [
-            'nom' => $nom,
-            'note' => $note,
-            'age' => $age
-        ]
+        'nom' => $nom,
+        'note' => $note,
+        'age' => $age
     ];
-    // dd($nouvel_stagiaire);
 
-    // 1- Ajouter cookie
-    $nouvel_stagiaire = json_encode($nouvel_stagiaire);
-    $annee = time() + 60 * 60 * 24 * 365;
-    setcookie('stagiaires', $nouvel_stagiaire, $annee);
-
-
-
-    // 2- Modifier cookie
-
+    $stagiaires[$new_key] = $nouvel_stagiaire;
+    create_cookie_json('stagiaires', $stagiaires, $one_year);
 
     $_SESSION['flash']['info'] = 'Bien ajouter';
 
@@ -43,57 +57,32 @@ if (isset($_POST['btn_ajouter_stagiaire'])) {
     exit();
 }
 
+// Modifier
+if (isset($_POST['btn_modifier_stagiaire'])) {
 
+    $nom = $_POST['nom'];
+    $note = $_POST['note'];
+    $age = $_POST['age'];
+    $stagiaire_key = $_POST['stagiaire_key'];
 
-if (!isset($_COOKIE['stagiaires'])) {
+    $new_data = [
+        'nom' => $nom,
+        'note' => $note,
+        'age' => $age
+    ];
 
-    // $stagiaires_db = [];
+    $stagiaires[$stagiaire_key] = $new_data;
 
-    // $stagiaires_db = [
-    //     1 => [
-    //         'nom' => 'Hind',
-    //         'note' => 10,
-    //         'age' => 22,
-    //     ],
-    //     2 => [
-    //         'nom' => 'Maryam',
-    //         'note' => 10,
-    //         'age' => 24,
-    //     ],
-    //     3  => [
-    //         'nom' => 'Youssra',
-    //         'note' => 10,
-    //         'age' => 18,
-    //     ],
-    //     4 => [
-    //         'nom' => 'Nabila',
-    //         'note' => 10,
-    //         'age' => 23,
-    //     ],
-    //     5 => [
-    //         'nom' => 'Sara',
-    //         'note' => 10,
-    //         'age' => 24,
-    //     ],
-    // ];
-
-    // $stagiaires_json = json_encode($stagiaires_db);
-    // $annee = time() + 60 * 60 * 24 * 365;
-    // setcookie('stagiaires', $stagiaires_json, $annee);
+    create_cookie_json('stagiaires', $stagiaires, $one_year);
+    $_SESSION['flash']['info'] = 'Bien modifier';
+    header('Location: cookies');
+    exit();
 }
 
 
-// dd($stagiaires_json);
-$stagiaires = [];
 
-if (isset($_COOKIE['stagiaires'])) {
-    $get_stagiaire_from_cookie = $_COOKIE['stagiaires'];
-    $stagiaires = json_decode($_COOKIE['stagiaires'], true);
-}
-// dd($stagiaires);
-// die();
 $content_php = ob_get_clean();
-
+// dd($stagiaires);
 ob_start(); ?>
 
 <h3>Gestion des stagiaire avec les cookies</h3>
@@ -128,13 +117,13 @@ ob_start(); ?>
                             </div>
 
                             <div class="form-floating mb-3">
-                                <input min="0" max="10" type="number" class="form-control input-sm" id="note" name="note" placeholder="Note:">
+                                <input type="number" class="form-control input-sm" id="note" name="note" placeholder="Note:">
                                 <label for="note">Note:</label>
                             </div>
 
 
                             <div class="form-floating mb-3">
-                                <input min="13" max="65" type="number" class="form-control input-sm" id="age" name="age" placeholder="Age:">
+                                <input type="number" class="form-control input-sm" id="age" name="age" placeholder="Age:">
                                 <label for="age">Age:</label>
                             </div>
 
@@ -181,8 +170,6 @@ ob_start(); ?>
 
                             <td>
 
-
-
                                 <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#update_<?= $key ?>">
                                     Modifier
                                 </button>
@@ -205,13 +192,13 @@ ob_start(); ?>
                                                     </div>
 
                                                     <div class="form-floating mb-3">
-                                                        <input min="0" max="10" type="number" class="form-control input-sm" id="note" name="note" placeholder="Note:" value="<?= $s['note'] ?>">
+                                                        <input type="number" class="form-control input-sm" id="note" name="note" placeholder="Note:" value="<?= $s['note'] ?>">
                                                         <label for="note">Note:</label>
                                                     </div>
 
 
                                                     <div class="form-floating mb-3">
-                                                        <input min="13" max="65" type="number" class="form-control input-sm" id="age" name="age" placeholder="Age:" value="<?= $s['age'] ?>">
+                                                        <input type="number" class="form-control input-sm" id="age" name="age" placeholder="Age:" value="<?= $s['age'] ?>">
                                                         <label for="age">Age:</label>
                                                     </div>
 
@@ -229,8 +216,6 @@ ob_start(); ?>
                                         </form>
                                     </div>
                                 </div>
-
-
 
                                 <a href="cookies&id=<?= $key ?>" class="btn btn-danger btn-sm">Supprimer</a>
                             </td>

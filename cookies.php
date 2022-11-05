@@ -54,21 +54,23 @@ if (isset($_POST['btn_modifier_stagiaire'])) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-    
+
 
 </head>
+
 <body>
 
     <div class="container my-5">
         <h1>Liste des stagiaire</h1>
 
-        
+
 
 
         <div class="card">
@@ -99,13 +101,13 @@ if (isset($_POST['btn_modifier_stagiaire'])) {
                                     </div>
 
                                     <div class="form-floating mb-3">
-                                        <input min="0" max="10" type="number" class="form-control input-sm" id="note" name="note" placeholder="Note:">
+                                        <input type="number" class="form-control input-sm" id="note" name="note" placeholder="Note:">
                                         <label for="note">Note:</label>
                                     </div>
 
 
                                     <div class="form-floating mb-3">
-                                        <input min="13" max="65" type="number" class="form-control input-sm" id="age" name="age" placeholder="Age:">
+                                        <input type="number" class="form-control input-sm" id="age" name="age" placeholder="Age:">
                                         <label for="age">Age:</label>
                                     </div>
 
@@ -153,53 +155,53 @@ if (isset($_POST['btn_modifier_stagiaire'])) {
 
 
 
-                                        
-                <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#update_<?= $key ?>">
-                Modifier
-                </button>
 
-                <div class="modal fade" id="update_<?= $key ?>" tabindex="-1" aria-labelledby="update_<?= $key ?>Label" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
+                                        <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#update_<?= $key ?>">
+                                            Modifier
+                                        </button>
 
-                            <form method="post">
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="update_<?= $key ?>Label">Modifier</h1>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <!-- modal-header -->
-                                <div class="modal-body">
+                                        <div class="modal fade" id="update_<?= $key ?>" tabindex="-1" aria-labelledby="update_<?= $key ?>Label" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
 
-                                    <div class="form-floating mb-3">
-                                        <input type="text" class="form-control input-sm" id="nom" name="nom" placeholder="Nom:" value="<?= $s['nom'] ?>">
-                                        <label for="nom">Nom:</label>
-                                    </div>
+                                                    <form method="post">
+                                                        <div class="modal-header">
+                                                            <h1 class="modal-title fs-5" id="update_<?= $key ?>Label">Modifier</h1>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <!-- modal-header -->
+                                                        <div class="modal-body">
 
-                                    <div class="form-floating mb-3">
-                                        <input min="0" max="10" type="number" class="form-control input-sm" id="note" name="note" placeholder="Note:" value="<?= $s['note'] ?>">
-                                        <label for="note">Note:</label>
-                                    </div>
+                                                            <div class="form-floating mb-3">
+                                                                <input type="text" class="form-control input-sm" id="nom" name="nom" placeholder="Nom:" value="<?= $s['nom'] ?>">
+                                                                <label for="nom">Nom:</label>
+                                                            </div>
+
+                                                            <div class="form-floating mb-3">
+                                                                <input type="number" class="form-control input-sm" id="note" name="note" placeholder="Note:" value="<?= $s['note'] ?>">
+                                                                <label for="note">Note:</label>
+                                                            </div>
 
 
-                                    <div class="form-floating mb-3">
-                                        <input min="13" max="65" type="number" class="form-control input-sm" id="age" name="age" placeholder="Age:" value="<?= $s['age'] ?>">
-                                        <label for="age">Age:</label>
-                                    </div>
+                                                            <div class="form-floating mb-3">
+                                                                <input type="number" class="form-control input-sm" id="age" name="age" placeholder="Age:" value="<?= $s['age'] ?>">
+                                                                <label for="age">Age:</label>
+                                                            </div>
 
-                                    <input type="text" name="stagiaire_key" value="<?= $key ?>">
+                                                            <input type="text" name="stagiaire_key" value="<?= $key ?>">
 
-                                </div>
-                                <!-- modal-body -->
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                                    <button type="submit" name="btn_modifier_stagiaire" class="btn btn-success">Modifier</button>
-                                </div>
-                                <!-- modal-footer -->
-                        </div>
-                        <!-- modal-content -->
-                        </form>
-                    </div>
-                </div>
+                                                        </div>
+                                                        <!-- modal-body -->
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                                            <button type="submit" name="btn_modifier_stagiaire" class="btn btn-success">Modifier</button>
+                                                        </div>
+                                                        <!-- modal-footer -->
+                                                </div>
+                                                <!-- modal-content -->
+                                                </form>
+                                            </div>
+                                        </div>
 
 
 
@@ -239,5 +241,5 @@ if (isset($_POST['btn_modifier_stagiaire'])) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous" defer>
     </script>
 </body>
-</html>
 
+</html>

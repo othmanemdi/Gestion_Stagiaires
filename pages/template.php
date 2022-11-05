@@ -40,13 +40,13 @@ ob_start(); ?>
                                 </div>
 
                                 <div class="form-floating mb-3">
-                                    <input min="0" max="10" type="number" class="form-control input-sm" id="note" name="note" placeholder="Note:">
+                                    <input type="number" class="form-control input-sm" id="note" name="note" placeholder="Note:">
                                     <label for="note">Note:</label>
                                 </div>
 
 
                                 <div class="form-floating mb-3">
-                                    <input min="13" max="65" type="number" class="form-control input-sm" id="age" name="age" placeholder="Age:">
+                                    <input type="number" class="form-control input-sm" id="age" name="age" placeholder="Age:">
                                     <label for="age">Age:</label>
                                 </div>
 
@@ -112,13 +112,13 @@ ob_start(); ?>
                                                     </div>
 
                                                     <div class="form-floating mb-3">
-                                                        <input min="0" max="10" type="number" class="form-control input-sm" id="note" name="note" placeholder="Note:" value="5">
+                                                        <input type="number" class="form-control input-sm" id="note" name="note" placeholder="Note:" value="5">
                                                         <label for="note">Note:</label>
                                                     </div>
 
 
                                                     <div class="form-floating mb-3">
-                                                        <input min="13" max="65" type="number" class="form-control input-sm" id="age" name="age" placeholder="Age:" value="23">
+                                                        <input type="number" class="form-control input-sm" id="age" name="age" placeholder="Age:" value="23">
                                                         <label for="age">Age:</label>
                                                     </div>
 
@@ -187,13 +187,13 @@ ob_start(); ?>
                                                     </div>
 
                                                     <div class="form-floating mb-3">
-                                                        <input min="0" max="10" type="number" class="form-control input-sm" id="note" name="note" placeholder="Note:" value="5">
+                                                        <input type="number" class="form-control input-sm" id="note" name="note" placeholder="Note:" value="5">
                                                         <label for="note">Note:</label>
                                                     </div>
 
 
                                                     <div class="form-floating mb-3">
-                                                        <input min="13" max="65" type="number" class="form-control input-sm" id="age" name="age" placeholder="Age:" value="23">
+                                                        <input type="number" class="form-control input-sm" id="age" name="age" placeholder="Age:" value="23">
                                                         <label for="age">Age:</label>
                                                     </div>
 
@@ -262,13 +262,13 @@ ob_start(); ?>
                                                     </div>
 
                                                     <div class="form-floating mb-3">
-                                                        <input min="0" max="10" type="number" class="form-control input-sm" id="note" name="note" placeholder="Note:" value="8">
+                                                        <input type="number" class="form-control input-sm" id="note" name="note" placeholder="Note:" value="8">
                                                         <label for="note">Note:</label>
                                                     </div>
 
 
                                                     <div class="form-floating mb-3">
-                                                        <input min="13" max="65" type="number" class="form-control input-sm" id="age" name="age" placeholder="Age:" value="20">
+                                                        <input type="number" class="form-control input-sm" id="age" name="age" placeholder="Age:" value="20">
                                                         <label for="age">Age:</label>
                                                     </div>
 
@@ -337,13 +337,13 @@ ob_start(); ?>
                                                     </div>
 
                                                     <div class="form-floating mb-3">
-                                                        <input min="0" max="10" type="number" class="form-control input-sm" id="note" name="note" placeholder="Note:" value="5">
+                                                        <input type="number" class="form-control input-sm" id="note" name="note" placeholder="Note:" value="5">
                                                         <label for="note">Note:</label>
                                                     </div>
 
 
                                                     <div class="form-floating mb-3">
-                                                        <input min="13" max="65" type="number" class="form-control input-sm" id="age" name="age" placeholder="Age:" value="20">
+                                                        <input type="number" class="form-control input-sm" id="age" name="age" placeholder="Age:" value="20">
                                                         <label for="age">Age:</label>
                                                     </div>
 
@@ -412,13 +412,13 @@ ob_start(); ?>
                                                     </div>
 
                                                     <div class="form-floating mb-3">
-                                                        <input min="0" max="10" type="number" class="form-control input-sm" id="note" name="note" placeholder="Note:" value="5">
+                                                        <input type="number" class="form-control input-sm" id="note" name="note" placeholder="Note:" value="5">
                                                         <label for="note">Note:</label>
                                                     </div>
 
 
                                                     <div class="form-floating mb-3">
-                                                        <input min="13" max="65" type="number" class="form-control input-sm" id="age" name="age" placeholder="Age:" value="25">
+                                                        <input type="number" class="form-control input-sm" id="age" name="age" placeholder="Age:" value="25">
                                                         <label for="age">Age:</label>
                                                     </div>
 

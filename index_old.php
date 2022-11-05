@@ -147,13 +147,13 @@ if (isset($_POST['btn_modifier_stagiaire'])) {
                                     </div>
 
                                     <div class="form-floating mb-3">
-                                        <input min="0" max="10" type="number" class="form-control input-sm" id="note" name="note" placeholder="Note:">
+                                        <input type="number" class="form-control input-sm" id="note" name="note" placeholder="Note:">
                                         <label for="note">Note:</label>
                                     </div>
 
 
                                     <div class="form-floating mb-3">
-                                        <input min="13" max="65" type="number" class="form-control input-sm" id="age" name="age" placeholder="Age:">
+                                        <input type="number" class="form-control input-sm" id="age" name="age" placeholder="Age:">
                                         <label for="age">Age:</label>
                                     </div>
 
@@ -224,13 +224,13 @@ if (isset($_POST['btn_modifier_stagiaire'])) {
                                                             </div>
 
                                                             <div class="form-floating mb-3">
-                                                                <input min="0" max="10" type="number" class="form-control input-sm" id="note" name="note" placeholder="Note:" value="<?= $s['note'] ?>">
+                                                                <input type="number" class="form-control input-sm" id="note" name="note" placeholder="Note:" value="<?= $s['note'] ?>">
                                                                 <label for="note">Note:</label>
                                                             </div>
 
 
                                                             <div class="form-floating mb-3">
-                                                                <input min="13" max="65" type="number" class="form-control input-sm" id="age" name="age" placeholder="Age:" value="<?= $s['age'] ?>">
+                                                                <input type="number" class="form-control input-sm" id="age" name="age" placeholder="Age:" value="<?= $s['age'] ?>">
                                                                 <label for="age">Age:</label>
                                                             </div>
 
