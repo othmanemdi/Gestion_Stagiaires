@@ -19,10 +19,98 @@ if (!file_exists($file)) {
     touch($file);
 }
 
+
+
+
+
+
+$file_content = trim(file_get_contents($file));
+$stagiaires = [];
+
+if (!empty($file_content)) {
+    $lignes = explode(PHP_EOL, $file_content);
+    foreach ($lignes as $key => $ligne) {
+        $stagiaires[$key + 1] = JSON_to_array($ligne);
+    }
+}
+
+// exit();
 // dd($folder);
 
+if (isset($_POST['btn_ajouter_stagiaire'])) {
+    $nom = $_POST['nom'];
+    $note = $_POST['note'];
+    $age = $_POST['age'];
+    $nouvel_stagiaire = [
+        'nom' => $nom,
+        'note' => $note,
+        'age' => $age
+    ];
 
+    $nouvel_stagiaire = array_to_JSON($nouvel_stagiaire);
 
+    file_put_contents($file, $nouvel_stagiaire . PHP_EOL, FILE_APPEND);
+
+    $_SESSION['flash']['info'] = 'Bien ajouter';
+
+    header('Location: fichiers');
+    exit();
+}
+
+$file_content = trim(file_get_contents($file));
+$stagiaires = [];
+if (!empty($file_content)) {
+    $lignes = explode(PHP_EOL, $file_content);
+    foreach ($lignes as $key => $ligne) {
+        $stagiaires[$key + 1] = JSON_to_array($ligne);
+    }
+}
+
+if (isset($_GET['id'])) {
+    $stagiaire_key = $_GET['id'];
+    unset($stagiaires[$stagiaire_key]);
+    // Supprimer le contenue de fichier text
+    file_put_contents($file, '');
+
+    $new_data = [];
+    foreach ($stagiaires as $key => $s) {
+        $new_data = array_to_JSON($s);
+        file_put_contents($file, $new_data . PHP_EOL, FILE_APPEND);
+    }
+    $_SESSION['flash']['info'] = 'Bien supprimer';
+
+    header('Location: fichiers');
+    exit();
+}
+
+if (isset($_POST['btn_modifier_stagiaire'])) {
+    $stagiaire_key = $_POST['stagiaire_key'];
+    $nom = $_POST['nom'];
+    $note = $_POST['note'];
+    $age = $_POST['age'];
+
+    // Récupéré les données de puis le formulaire
+    $new_data = [
+        'nom' => $nom,
+        'note' => $note,
+        'age' => $age
+    ];
+    $old_data =  $stagiaires[$stagiaire_key];
+
+    $stagiaires[$stagiaire_key] = $new_data;
+
+    file_put_contents($file, '');
+
+    $new_data_file = [];
+    foreach ($stagiaires as $key => $s) {
+        $new_data_file = array_to_JSON($s);
+        file_put_contents($file, $new_data_file . PHP_EOL, FILE_APPEND);
+    }
+
+    $_SESSION['flash']['info'] = 'Bien modifier';
+    header('Location: fichiers');
+    exit();
+}
 
 
 
@@ -108,82 +196,72 @@ ob_start(); ?>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
-                                1 </td>
-                            <td>
-                                Maryam </td>
-                            <td>
-                                5 </td>
-                            <td>
-                                23 </td>
-                            <td>
+                        <?php foreach ($stagiaires as $key => $s) : ?>
+                            <tr>
+                                <td><?= $key ?> </td>
+                                <td><?= $s['nom'] ?> </td>
+                                <td><?= $s['note'] ?> </td>
+                                <td><?= $s['age'] ?> </td>
+
+
+                                <td>
 
 
 
+                                    <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#update_<?= $key ?>">
+                                        Modifier
+                                    </button>
 
-
-                                <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#update_1">
-                                    Modifier
-                                </button>
-
-                                <div class="modal fade" id="update_1" tabindex="-1" aria-labelledby="update_1Label" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-
+                                    <div class="modal fade" id="update_<?= $key ?>" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog">
                                             <form method="post">
-                                                <div class="modal-header">
-                                                    <h1 class="modal-title fs-5" id="update_1Label">Modifier</h1>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <!-- modal-header -->
-                                                <div class="modal-body">
+                                                <div class="modal-content">
 
-                                                    <div class="form-floating mb-3">
-                                                        <input type="text" class="form-control input-sm" id="nom" name="nom" placeholder="Nom:" value="Maryam">
-                                                        <label for="nom">Nom:</label>
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5">Modifier</h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
+                                                    <!-- modal-header -->
+                                                    <div class="modal-body">
 
-                                                    <div class="form-floating mb-3">
-                                                        <input type="number" class="form-control input-sm" id="note" name="note" placeholder="Note:" value="5">
-                                                        <label for="note">Note:</label>
+                                                        <div class="form-floating mb-3">
+                                                            <input type="text" class="form-control input-sm" id="nom" name="nom" placeholder="Nom:" value="<?= $s['nom'] ?>">
+                                                            <label for="nom">Nom:</label>
+                                                        </div>
+
+                                                        <div class="form-floating mb-3">
+                                                            <input type="number" class="form-control input-sm" id="note" name="note" placeholder="Note:" value="<?= $s['note'] ?>">
+                                                            <label for="note">Note:</label>
+                                                        </div>
+
+
+                                                        <div class="form-floating mb-3">
+                                                            <input type="number" class="form-control input-sm" id="age" name="age" placeholder="Age:" value="<?= $s['age'] ?>">
+                                                            <label for="age">Age:</label>
+                                                        </div>
+
+                                                        <input type="hidden" name="stagiaire_key" value="<?= $key ?>">
+
                                                     </div>
-
-
-                                                    <div class="form-floating mb-3">
-                                                        <input type="number" class="form-control input-sm" id="age" name="age" placeholder="Age:" value="23">
-                                                        <label for="age">Age:</label>
+                                                    <!-- modal-body -->
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                                        <button type="submit" name="btn_modifier_stagiaire" class="btn btn-success">Modifier</button>
                                                     </div>
-
-                                                    <input type="hidden" name="stagiaire_key" value="1">
-
+                                                    <!-- modal-footer -->
                                                 </div>
-                                                <!-- modal-body -->
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                                                    <button type="submit" name="btn_modifier_stagiaire" class="btn btn-success">Modifier</button>
-                                                </div>
-                                                <!-- modal-footer -->
+                                                <!-- modal-content -->
+                                            </form>
                                         </div>
-                                        <!-- modal-content -->
-                                        </form>
                                     </div>
-                                </div>
 
 
 
 
-
-
-
-
-
-
-
-                                <a href="fichiers&id=1" class="btn btn-danger btn-sm">Supprimer</a>
-                            </td>
-                        </tr>
-
+                                    <a href="fichiers&id=<?= $key ?>" class="btn btn-danger btn-sm">Supprimer</a>
+                                </td>
+                            </tr>
+                        <?php endforeach ?>
 
                     </tbody>
                     <tfoot>

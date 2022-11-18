@@ -1,0 +1,4 @@
+{"nom":"Maryam","note":"10","age":"23"}
+{"nom":"Nabila","note":"10","age":"23"}
+{"nom":"Sara","note":"10","age":"25"}
+{"nom":"Hind ","note":"10","age":"21"}
