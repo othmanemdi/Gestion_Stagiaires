@@ -4,23 +4,68 @@ ob_start();
 // php
 $title = "MySql";
 
-
 // Insert fake data
 
 // for ($i = 1; $i <= 20; $i++) {
 //     $db->query("INSERT INTO stagiaires SET nom = 'Stagiare $i', age = 24, note = 5");
 // }
 
-
-
-
 if (isset($_POST['ajouter_stagiaire'])) {
 
-    $nom = $_POST['nom'];
+    $nom = e($_POST['nom']);
+
+    // if (preg_match('/^[a-zA-Z0-9 -_]+$/', $_POST['nom'])) {
+    //     echo $_POST['nom'] . " OK";
+    // } else {
+    //     echo $_POST['nom'] . " Pas ok";
+    // }
+    // exit();
+
+    // dd($nom);
     $age = (int)$_POST['age'];
     $note = (int) $_POST['note'];
-    $stagiaire = $db->query("INSERT INTO stagiaires SET nom = '$nom', age = $age, note = $note");
+    // $req = "INSERT INTO stagiaires SET nom = '$nom', age = $age, note = $note";
 
+    $stagiaire = $db->prepare("INSERT INTO stagiaires SET 
+            nom = :nom,
+            age = :age,
+            note = :note
+        ");
+
+    $stagiaire->execute(
+        [
+            'nom' => $nom,
+            'age' => $age,
+            'note' => $note
+        ]
+    );
+
+
+    // $req = "SELECT id FROM stagiaires WHERE nom = '$nom' AND password = '$password'";
+
+    // $stagiaire = $db->query($req)->fetch();
+
+
+    // $req = $db->prepare("SELECT id FROM stagiaires WHERE nom = :nom AND password = :password LIMIT 1");
+
+    // $req->execute(
+    //     [
+    //         'nom' => $nom,
+    //         'password' => $password
+    //     ]
+    // );
+
+    // $stagiaire = $req->fetch();
+
+    // $classe = $req->fetch();
+    // if ($stagiaire) {
+    //     echo 'Bien connecter';
+    // } else {
+    //     echo 'Username ou mot de passe Incorecte';
+    // }
+    // dd($req);
+    // exit();
+    // dd($req);
     if ($stagiaire) {
         $_SESSION['flash']['info'] = 'Bien ajouter';
     } else {
@@ -73,17 +118,30 @@ if (isset($_POST['supprimer_stagiaire'])) {
     exit();
 }
 
+
 $filter = '';
 
 if (isset($_POST['rechercher_stagiaire'])) {
-    $filter =  " AND nom LIKE '%" . trim($_POST['s']) . "%'";
-}
+    $s = trim($_POST['s']);
+    $filter =  " AND ";
+    $filter .=  " ( ";
+    $filter .= " nom LIKE '%" .  $s . "%'";
 
-$stagiaires = $db->query("SELECT * FROM stagiaires 
+    $filter .=  " OR ";
+    $filter .= " note LIKE '%{$s}%'";
+
+    $filter .=  " OR ";
+    $filter .= " age LIKE '%" . trim($_POST['s']) . "%'";
+    $filter .=  " ) ";
+}
+$req = "SELECT * FROM stagiaires 
 WHERE 
 deleted_at IS NULL 
 $filter
-ORDER BY id DESC")->fetchAll();
+ORDER BY id DESC";
+
+// dd($req);
+$stagiaires = $db->query($req)->fetchAll();
 
 
 // $stagiaires = $db->query("SELECT * FROM stagiaires WHERE is_active = 1 ORDER BY id DESC")->fetchAll();
@@ -133,9 +191,10 @@ ob_start(); ?>
 
             <div>
 
+
                 <form method="post">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Rechercher:" name="s" value="<?= trim($_POST['s']) ?? '' ?>">
+                        <input type="text" class="form-control" placeholder="Rechercher:" name="s" value="<?= isset($_POST['s']) ? trim($_POST['s']) : '' ?>">
                         <button class="btn btn-outline-secondary" type="submit" name="rechercher_stagiaire">Rechercher</button>
                     </div>
                 </form>
@@ -149,11 +208,11 @@ ob_start(); ?>
                         <h1 class="modal-title fs-5">Ajouter un nouveu stagiaire</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form method="post">
+                    <form method="post" autocomplete="off">
                         <div class="modal-body">
 
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="nom" class="form-label">Nom:</label>
                                         <input type="text" class="form-control" name="nom" id="nom" placeholder="Nom:">
@@ -393,6 +452,9 @@ ob_start(); ?>
     <!-- cord-body -->
 </div>
 <!-- card -->
+
+
+
 
 
 <?php $content_html = ob_get_clean(); ?>

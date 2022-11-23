@@ -38,3 +38,9 @@ function destroy_cookie($key): void
 {
     setcookie($key, "", -1);
 }
+
+
+function e($value)
+{
+    return trim(htmlentities($value));
+}
